@@ -303,15 +303,14 @@ namespace BeatSaverVoting.UI
                     "mock" => UserInfo.Platform.Test,
                     _ => throw new NotImplementedException(),
                 }, _userModel.user.userId.ToString(), _userModel.user.displayName);
-                var b = new PlatformAuthenticationTokenProvider(_userModel, a);
+                var b = await new PlatformAuthenticationTokenProvider(_userModel, a).GetAuthenticationToken();
 
                 return (a, b);
             });
 
             yield return new WaitUntil(() => task.IsCompleted);
-            var (userInfo, authData) = task.Result;
+            var (userInfo, authToken) = task.Result;
             var userId = userInfo.platformUserId;
-            var authToken = authData.GetAuthenticationToken().GetAwaiter().GetResult();
 
             if (userInfo.platform == UserInfo.Platform.Steam)
             {
